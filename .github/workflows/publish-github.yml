@@ -38,13 +38,15 @@ jobs:
         run: rm -rf LibRaw-0.20.2 LibRaw-0.20.2.tar.gz
       - id: global-npm
         name: Setup Global npm Packages
-        run: sudo npm i -g node-gyp
+        run: sudo npm i -g node-gyp prebuildify
       - id: install-npm
         name: Install npm Packages
         run: npm install
       - id: build
         name: Run Build
         run: npm run build
+      - id: prebuildify
+        run: prebuildify --napi
       - uses: actions/setup-node@v2
         with:
           node-version: '16.x'

@@ -167,7 +167,7 @@ Napi::Value LibRawWrapper::ExtractTiff(const Napi::CallbackInfo &info)
   Napi::String filename = info[0].As<Napi::String>();
 
   this->processor_->imgdata.params.output_tiff = 1; // output as a tiff!
-  // this->processor_->imgdata.params.half_size = 1 // export half size files (bayer = 50% resolution)
+  // this->processor_->imgdata.params.half_size = 1  // export half size files (bayer = 50% resolution)
   this->processor_->imgdata.params.output_bps = 8;    // 8 bits export is enough
   this->processor_->imgdata.params.output_color = 1;  // sRGB = 1
   this->processor_->imgdata.params.use_camera_wb = 1; // use camera white balance

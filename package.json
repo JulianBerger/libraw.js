@@ -1,5 +1,5 @@
 {
-  "name": "libraw.js",
+  "name": "@julianberger/libraw.js",
   "author": "Justin Kambic",
   "version": "2.2.5",
   "description": "Provide a subset of LibRaw functionality.",

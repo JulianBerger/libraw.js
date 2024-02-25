@@ -113,18 +113,7 @@ Napi::Value LibRawWrapper::OpenFile(const Napi::CallbackInfo &info)
     Napi::TypeError::New(env, "openFile received an invalid argument, bigfile_size must be a number.").ThrowAsJavaScriptException();
   }
   Napi::String filename = info[0].As<Napi::String>();
-  int ret;
-  if (info.Length() == 2)
-  {
-    Napi::Number bigfile_size = info[1].As<Napi::Number>();
-    ret = this->processor_->open_file(
-        filename.Utf8Value().c_str(),
-        bigfile_size.Int64Value());
-  }
-  else
-  {
-    ret = this->processor_->open_file(filename.Utf8Value().c_str());
-  }
+  int ret = this->processor_->open_file(filename.Utf8Value().c_str());
 
   return Napi::Value::From(env, ret);
 }

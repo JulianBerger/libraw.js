@@ -38,11 +38,11 @@ public:
   Napi::Value OpenBuffer(const Napi::CallbackInfo &info);
   Napi::Value Unpack(const Napi::CallbackInfo &info);
   Napi::Value UnpackThumb(const Napi::CallbackInfo &info);
-  Napi::Value ExtractTiff(const Napi::CallbackInfo &info);
   Napi::Value ErrorCount(const Napi::CallbackInfo &info);
   Napi::Value Version(const Napi::CallbackInfo &info);
   Napi::Value VersionNumber(const Napi::CallbackInfo &info);
   Napi::Value StrError(const Napi::CallbackInfo &info);
+  Napi::Value ExtractTiff(const Napi::CallbackInfo &info);
   void RecycleDatastream(const Napi::CallbackInfo &info);
   void Recycle(const Napi::CallbackInfo &info);
 

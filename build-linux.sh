@@ -1,6 +1,6 @@
 CURRENT_LIBRAWJS_VERSION=3.0.0
 PREBUILD_PATH="prebuilds/linux-x64"
-NODE_FILE_NAME="node.napi.node"
+NODE_FILE_NAME="@julianberger+libraw.js.node"
 OUTPUT_PATH="./${PREBUILD_PATH}/${NODE_FILE_NAME}"
 BACKUP_PATH="./${PREBUILD_PATH}/bak.${NODE_FILE_NAME}"
 IMAGE_TAG_NAME="libraw.js:${CURRENT_LIBRAWJS_VERSION}"
@@ -21,7 +21,7 @@ fi
 
 DOCKER_BUILDKIT=1
 
-docker build -t ${IMAGE_TAG_NAME} --output ${PREBUILD_PATH} --no-cache .
+docker build -t ${IMAGE_TAG_NAME} --output ${PREBUILD_PATH} --no-cache --platform linux/amd64 .
 
 DOCKER_EXIT_CODE=$?
 

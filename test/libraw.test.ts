@@ -26,6 +26,7 @@ import fs, { promises as fsPromises } from 'fs';
 import * as t from 'io-ts';
 import { PathReporter } from 'io-ts/lib/PathReporter';
 import { isRight } from 'fp-ts/Either';
+import crypto from 'crypto';
 
 const RAW_SONY_FILE_PATH = path.join(
   __dirname,
@@ -41,7 +42,7 @@ const TEST_THUMBNAIL_JPG = path.join(
   'test_thumb.jpg'
 );
 const SAMPLE_TIFF = path.join(__dirname, 'test_images', 'sample.tiff');
-const TEST_TIFF_OUTPUT_PATH = path.join(__dirname, 'test_images', 'test.tiff');
+const TEST_TIFF_OUTPUT_PATH = path.join(__dirname, 'test_images', 'extracted-ouput.tiff');
 
 const __2dNumArray = t.array(t.array(t.number));
 const __dngColor = t.array(
@@ -347,11 +348,15 @@ describe('LibRaw', () => {
       jest.setTimeout(20000);
       expect(await lr.openFile(RAW_SONY_FILE_PATH)).toBe(0);
       expect(await lr.extract_tiff(TEST_TIFF_OUTPUT_PATH)).toBe(0);
-      const [output, sample] = await Promise.all([
-        fsPromises.readFile(TEST_TIFF_OUTPUT_PATH, { encoding: 'binary' }),
-        fsPromises.readFile(SAMPLE_TIFF, { encoding: 'binary' }),
-      ]);
-      expect(output).toEqual(sample);
+
+      const outputTiffFile = fs.readFileSync(TEST_TIFF_OUTPUT_PATH);
+      const sampleTiffFile = fs.readFileSync(SAMPLE_TIFF);
+
+      // comparing buffers did not work, so we hash them and compare the hashes
+      const outputTiffFileHash = crypto.createHash('sha256').update(outputTiffFile).digest();
+      const sampleTiffFileHash = crypto.createHash('sha256').update(sampleTiffFile).digest();
+
+      expect(outputTiffFileHash).toEqual(sampleTiffFileHash);
     });
   });
 
@@ -384,7 +389,7 @@ describe('LibRaw', () => {
 
   describe('version', () => {
     test('returns version string', async () => {
-      expect(await lr.version()).toEqual('0.21.1-Release');
+      expect(await lr.version()).toEqual('0.21.2-Release');
     });
   });
 

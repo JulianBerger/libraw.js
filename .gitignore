@@ -3,4 +3,11 @@ coverage
 dist
 node_modules
 prebuilds
-test/.DS_Store
+
+# Ignore the LibRaw source code
+LibRaw*
+docker-build*.log
+jpegsrc*
+jpeg-9d
+.DS_Store
+extracted-ouput.tiff

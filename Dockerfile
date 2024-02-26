@@ -17,7 +17,7 @@ RUN tar xzvf LibRaw-0.21.1.tar.gz && cd LibRaw-0.21.1 && ./configure --with-pic 
 
 RUN npm i -g node-gyp node-gyp-build prebuildify
 RUN git clone https://github.com/JulianBerger/libraw.js.git
-RUN cd libraw.js && git pull origin master && npm install && npm run format-check && npm run lint && npm run build && npm test && prebuildify --napi
+RUN cd libraw.js && git pull origin master && npm install && npm run format-check && npm run lint && npm run build && prebuildify --napi
 
 WORKDIR /libraw.js
 

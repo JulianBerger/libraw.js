@@ -42,7 +42,11 @@ const TEST_THUMBNAIL_JPG = path.join(
   'test_thumb.jpg'
 );
 const SAMPLE_TIFF = path.join(__dirname, 'test_images', 'sample.tiff');
-const TEST_TIFF_OUTPUT_PATH = path.join(__dirname, 'test_images', 'extracted-ouput.tiff');
+const TEST_TIFF_OUTPUT_PATH = path.join(
+  __dirname,
+  'test_images',
+  'extracted-ouput.tiff'
+);
 
 const __2dNumArray = t.array(t.array(t.number));
 const __dngColor = t.array(
@@ -353,8 +357,14 @@ describe('LibRaw', () => {
       const sampleTiffFile = fs.readFileSync(SAMPLE_TIFF);
 
       // comparing buffers did not work, so we hash them and compare the hashes
-      const outputTiffFileHash = crypto.createHash('sha256').update(outputTiffFile).digest();
-      const sampleTiffFileHash = crypto.createHash('sha256').update(sampleTiffFile).digest();
+      const outputTiffFileHash = crypto
+        .createHash('sha256')
+        .update(outputTiffFile)
+        .digest();
+      const sampleTiffFileHash = crypto
+        .createHash('sha256')
+        .update(sampleTiffFile)
+        .digest();
 
       expect(outputTiffFileHash).toEqual(sampleTiffFileHash);
     });

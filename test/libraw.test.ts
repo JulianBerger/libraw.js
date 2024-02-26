@@ -360,11 +360,11 @@ describe('LibRaw', () => {
       const outputTiffFileHash = crypto
         .createHash('sha256')
         .update(outputTiffFile)
-        .digest();
+        .digest().toString('hex');
       const sampleTiffFileHash = crypto
         .createHash('sha256')
         .update(sampleTiffFile)
-        .digest();
+        .digest().toString('hex');
 
       expect(outputTiffFileHash).toEqual(sampleTiffFileHash);
     });

@@ -353,18 +353,22 @@ describe('LibRaw', () => {
       expect(await lr.openFile(RAW_SONY_FILE_PATH)).toBe(0);
       expect(await lr.extract_tiff(TEST_TIFF_OUTPUT_PATH)).toBe(0);
 
-      const outputTiffFile = fs.readFileSync(TEST_TIFF_OUTPUT_PATH);
-      const sampleTiffFile = fs.readFileSync(SAMPLE_TIFF);
-
       // comparing buffers did not work, so we hash them and compare the hashes
+      const outputTiffFile = fs.readFileSync(TEST_TIFF_OUTPUT_PATH);
       const outputTiffFileHash = crypto
         .createHash('sha256')
         .update(outputTiffFile)
-        .digest().toString('hex');
+        .digest()
+        .toString('hex');
+
+      console.log('output file hash', outputTiffFileHash);
+
+      const sampleTiffFile = fs.readFileSync(SAMPLE_TIFF);
       const sampleTiffFileHash = crypto
         .createHash('sha256')
         .update(sampleTiffFile)
-        .digest().toString('hex');
+        .digest()
+        .toString('hex');
 
       expect(outputTiffFileHash).toEqual(sampleTiffFileHash);
     });

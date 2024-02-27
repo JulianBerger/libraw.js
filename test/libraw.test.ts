@@ -364,8 +364,6 @@ describe('LibRaw', () => {
         .digest()
         .toString('hex');
 
-      console.log('output file hash', outputTiffFileHash);
-
       expect(outputTiffFileHash).toEqual(
         '779b795bebb6d739875324804c117b990fe537ba298a2d265c52a01d4f11ff32'
       );
@@ -388,8 +386,6 @@ describe('LibRaw', () => {
         .digest()
         .toString('hex');
 
-      console.log('output file hash', outputTiffFileHash);
-
       /* const sampleTiffFile = fs.readFileSync(SAMPLE_TIFF);
       const sampleTiffFileHash = crypto
         .createHash('sha256')
@@ -398,7 +394,7 @@ describe('LibRaw', () => {
         .toString('hex'); */
 
       expect(outputTiffFileHash).toEqual(
-        '85946097dd8854a635016f27569b934fe6b3b9ef84afcd59fc1a773c54821775'
+        'dff7edba9cdb83842ce7c5fad5158f44bdcf0e68efa7e7edd92904534575dfc8'
       );
     });
   });

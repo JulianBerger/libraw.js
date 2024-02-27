@@ -36,17 +36,16 @@ const RAW_NIKON_FILE_PATH = path.join(
   __dirname,
   'test_images/RAW_NIKON_Z6.NEF'
 );
+const RAW_FUJI_FILE_PATH = path.join(
+  __dirname,
+  'test_images/RAW_FUJI_X100VI.RAF'
+);
 const TEST_THUMBNAIL_JPG = path.join(
   __dirname,
   'test_images',
   'test_thumb.jpg'
 );
-const SAMPLE_TIFF = path.join(__dirname, 'test_images', 'sample.tiff');
-const TEST_TIFF_OUTPUT_PATH = path.join(
-  __dirname,
-  'test_images',
-  'extracted-ouput.tiff'
-);
+// const SAMPLE_TIFF = path.join(__dirname, 'test_images', 'sample.tiff');
 
 const __2dNumArray = t.array(t.array(t.number));
 const __dngColor = t.array(
@@ -348,13 +347,17 @@ describe('LibRaw', () => {
       );
     });
 
-    test('extracts a tiff', async () => {
+    test('extracts a tiff from sony raw', async () => {
       jest.setTimeout(20000);
       expect(await lr.openFile(RAW_SONY_FILE_PATH)).toBe(0);
-      expect(await lr.extract_tiff(TEST_TIFF_OUTPUT_PATH)).toBe(0);
+      expect(await lr.extract_tiff(`${RAW_SONY_FILE_PATH}.output.tiff`)).toBe(
+        0
+      );
 
       // comparing buffers did not work, so we hash them and compare the hashes
-      const outputTiffFile = fs.readFileSync(TEST_TIFF_OUTPUT_PATH);
+      const outputTiffFile = fs.readFileSync(
+        `${RAW_SONY_FILE_PATH}.output.tiff`
+      );
       const outputTiffFileHash = crypto
         .createHash('sha256')
         .update(outputTiffFile)
@@ -363,14 +366,40 @@ describe('LibRaw', () => {
 
       console.log('output file hash', outputTiffFileHash);
 
-      const sampleTiffFile = fs.readFileSync(SAMPLE_TIFF);
+      expect(outputTiffFileHash).toEqual(
+        '779b795bebb6d739875324804c117b990fe537ba298a2d265c52a01d4f11ff32'
+      );
+    });
+
+    test('extracts a tiff from fuji raw', async () => {
+      jest.setTimeout(20000);
+      expect(await lr.openFile(RAW_FUJI_FILE_PATH)).toBe(0);
+      expect(await lr.extract_tiff(`${RAW_FUJI_FILE_PATH}.output.tiff`)).toBe(
+        0
+      );
+
+      // comparing buffers did not work, so we hash them and compare the hashes
+      const outputTiffFile = fs.readFileSync(
+        `${RAW_FUJI_FILE_PATH}.output.tiff`
+      );
+      const outputTiffFileHash = crypto
+        .createHash('sha256')
+        .update(outputTiffFile)
+        .digest()
+        .toString('hex');
+
+      console.log('output file hash', outputTiffFileHash);
+
+      /* const sampleTiffFile = fs.readFileSync(SAMPLE_TIFF);
       const sampleTiffFileHash = crypto
         .createHash('sha256')
         .update(sampleTiffFile)
         .digest()
-        .toString('hex');
+        .toString('hex'); */
 
-      expect(outputTiffFileHash).toEqual(sampleTiffFileHash);
+      expect(outputTiffFileHash).toEqual(
+        '85946097dd8854a635016f27569b934fe6b3b9ef84afcd59fc1a773c54821775'
+      );
     });
   });
 

@@ -10,4 +10,4 @@ docker-build*.log
 jpegsrc*
 jpeg-9d
 .DS_Store
-extracted-ouput.tiff
+*.output.tiff

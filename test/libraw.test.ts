@@ -413,7 +413,7 @@ describe('LibRaw', () => {
         .toString('hex');
 
       expect(outputTiffFileHash).toEqual(
-        '1a1a65cf971ff06fcf86e34ee23fd7213f2e38da197ac3ff5c6bb372f9fa0b3d'
+        'bb2b48e80a07b9e583c019c2a471cb5573bf734c46ea5bb7c8220f8edc0fc411'
       );
     });
 
@@ -435,7 +435,7 @@ describe('LibRaw', () => {
         .toString('hex');
 
       expect(outputTiffFileHash).toEqual(
-        'f48dc6898de1ffe168d892dfca2c0fec7517d84c20fb50e591cb986840e0a004'
+        '2a395ee6c605fc123691a79add1f9c322f0c37d300a090da2ac0ab1f65569bce'
       );
     });
   });

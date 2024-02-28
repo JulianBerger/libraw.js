@@ -155,25 +155,25 @@ Napi::Value LibRawWrapper::ExtractTiff(const Napi::CallbackInfo &info)
 
   Napi::String filename = info[0].As<Napi::String>();
 
-  this->processor_->imgdata.params.output_tiff = 1;          // output as a tiff!
-  this->processor_->imgdata.params.output_bps = 8;           // 8 bits export is enough
-  this->processor_->imgdata.params.output_color = 1;         // sRGB = 1
-  this->processor_->imgdata.params.use_camera_wb = 1;        // use camera white balance
-  this->processor_->imgdata.params.use_camera_matrix = 1;    // use camera color matrix
-  this->processor_->imgdata.params.no_auto_bright = 0;       // contrast stretch the image
-  this->processor_->imgdata.params.auto_bright_thr = 0.0005; // contrast stretch the image
+  this->processor_->imgdata.params.output_tiff = 1;           // output as a tiff!
+  this->processor_->imgdata.params.output_bps = 8;            // 8 bits export is enough
+  this->processor_->imgdata.params.output_color = 1;          // sRGB = 1
+  this->processor_->imgdata.params.use_camera_wb = 1;         // use camera white balance
+  this->processor_->imgdata.params.use_camera_matrix = 1;     // use camera color matrix
+  this->processor_->imgdata.params.no_auto_bright = 0;        // contrast stretch the image
+  this->processor_->imgdata.params.auto_bright_thr = 0.00085; // contrast stretch the image
 
   this->processor_->imgdata.params.highlight = 0; // Highlights processing
   // this->processor_->imgdata.params.med_passes = 1;        // median filter passes
   // this->processor_->imgdata.params.fbdd_noiserd = 1; // noise reduction
 
-  this->processor_->imgdata.params.gamm[0] = 1.0 / 2.222f; // rec. BT.709
-  this->processor_->imgdata.params.gamm[1] = 4.5f;         // rec. BT.709
+  this->processor_->imgdata.params.gamm[0] = 1.0 / 2.4f; // srgb
+  this->processor_->imgdata.params.gamm[1] = 4.5f;       // rec. BT.709
 
   /* exposure correction (lighten the raw while preserving the highlights) */
   this->processor_->imgdata.params.exp_correc = 1;
-  this->processor_->imgdata.params.exp_shift = 1.875f;  /* 0.25 = 2stop dark, 8 = 3 stop light */
-  this->processor_->imgdata.params.exp_preser = 0.875f; /* 0 - 1.0 */
+  this->processor_->imgdata.params.exp_shift = 1.7f;  /* 0.25 = 2stop dark, 8 = 3 stop light */
+  this->processor_->imgdata.params.exp_preser = 0.5f; /* 0 - 1.0 */
 
   /* user_qual 0 - linear interpolation
              1 - VNG interpolation

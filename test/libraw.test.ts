@@ -40,6 +40,10 @@ const RAW_FUJI_FILE_PATH = path.join(
   __dirname,
   'test_images/RAW_FUJI_X100VI.RAF'
 );
+const RAW_LEICA_FILE_PATH = path.join(
+  __dirname,
+  'test_images/RAW_LEICA_SL.dng'
+);
 const TEST_THUMBNAIL_JPG = path.join(
   __dirname,
   'test_images',
@@ -386,12 +390,49 @@ describe('LibRaw', () => {
         .digest()
         .toString('hex');
 
-      /* const sampleTiffFile = fs.readFileSync(SAMPLE_TIFF);
-      const sampleTiffFileHash = crypto
+      expect(outputTiffFileHash).toEqual(
+        '8d1ee7b3866d5216f12b531aad0748f0be114f9c6143b87275fb5869ee17b7d2'
+      );
+    });
+
+    test('extracts a tiff from leica dng raw', async () => {
+      jest.setTimeout(20000);
+      expect(await lr.openFile(RAW_LEICA_FILE_PATH)).toBe(0);
+      expect(await lr.extract_tiff(`${RAW_LEICA_FILE_PATH}.output.tiff`)).toBe(
+        0
+      );
+
+      // comparing buffers did not work, so we hash them and compare the hashes
+      const outputTiffFile = fs.readFileSync(
+        `${RAW_LEICA_FILE_PATH}.output.tiff`
+      );
+      const outputTiffFileHash = crypto
         .createHash('sha256')
-        .update(sampleTiffFile)
+        .update(outputTiffFile)
         .digest()
-        .toString('hex'); */
+        .toString('hex');
+
+      expect(outputTiffFileHash).toEqual(
+        '8d1ee7b3866d5216f12b531aad0748f0be114f9c6143b87275fb5869ee17b7d2'
+      );
+    });
+
+    test('extracts a tiff from Nikon Z6 raw', async () => {
+      jest.setTimeout(20000);
+      expect(await lr.openFile(RAW_NIKON_FILE_PATH)).toBe(0);
+      expect(await lr.extract_tiff(`${RAW_NIKON_FILE_PATH}.output.tiff`)).toBe(
+        0
+      );
+
+      // comparing buffers did not work, so we hash them and compare the hashes
+      const outputTiffFile = fs.readFileSync(
+        `${RAW_NIKON_FILE_PATH}.output.tiff`
+      );
+      const outputTiffFileHash = crypto
+        .createHash('sha256')
+        .update(outputTiffFile)
+        .digest()
+        .toString('hex');
 
       expect(outputTiffFileHash).toEqual(
         '8d1ee7b3866d5216f12b531aad0748f0be114f9c6143b87275fb5869ee17b7d2'

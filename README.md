@@ -1,5 +1,23 @@
 # libraw.js
 
+## How to Build and release new version?
+
+### Build the Mac Binary
+
+```bash
+npm run build && prebuildify --napi
+```
+
+### Build the Linux Binary
+
+The Linux binary will be built in a Docker container using the Amazon Linux 2023 Image. You can build the binary by running the following command: `./build-linux.sh`
+
+### Release to NPM
+
+```bash
+npm publish --access=public
+```
+
 ## Installation
 
 ```

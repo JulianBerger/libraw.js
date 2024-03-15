@@ -36,6 +36,10 @@ const RAW_NIKON_FILE_PATH = path.join(
   __dirname,
   'test_images/RAW_NIKON_Z6.NEF'
 );
+const RAW_NIKON_PORTRAIT_FILE_PATH = path.join(
+  __dirname,
+  'test_images/RAW_NIKON_PORTRAIT.NEF'
+);
 const RAW_FUJI_FILE_PATH = path.join(
   __dirname,
   'test_images/RAW_FUJI_X100VI.RAF'
@@ -427,6 +431,28 @@ describe('LibRaw', () => {
       // comparing buffers did not work, so we hash them and compare the hashes
       const outputTiffFile = fs.readFileSync(
         `${RAW_NIKON_FILE_PATH}.output.tiff`
+      );
+      const outputTiffFileHash = crypto
+        .createHash('sha256')
+        .update(outputTiffFile)
+        .digest()
+        .toString('hex');
+
+      expect(outputTiffFileHash).toEqual(
+        '2a395ee6c605fc123691a79add1f9c322f0c37d300a090da2ac0ab1f65569bce'
+      );
+    });
+
+    test('extracts a tiff from Nikon raw in portrait format', async () => {
+      jest.setTimeout(20000);
+      expect(await lr.openFile(RAW_NIKON_PORTRAIT_FILE_PATH)).toBe(0);
+      expect(await lr.extract_tiff(`${RAW_NIKON_PORTRAIT_FILE_PATH}.output.tiff`)).toBe(
+        0
+      );
+
+      // comparing buffers did not work, so we hash them and compare the hashes
+      const outputTiffFile = fs.readFileSync(
+        `${RAW_NIKON_PORTRAIT_FILE_PATH}.output.tiff`
       );
       const outputTiffFileHash = crypto
         .createHash('sha256')

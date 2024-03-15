@@ -184,6 +184,7 @@ Napi::Value LibRawWrapper::ExtractTiff(const Napi::CallbackInfo &info)
 */
   this->processor_->imgdata.params.user_qual = 2; // interpolation
 
+  this->processor_->adjust_sizes_info_only();
   this->processor_->unpack();
   this->processor_->dcraw_process();
   return Napi::Value::From(

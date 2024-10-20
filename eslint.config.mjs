@@ -24,7 +24,7 @@ const tsConfig = ts.config({
 });
 
 export default ts.config(...tsConfig, {
-  ignores: ['**/node_modules', '**/dist', 'babel.config.js'],
+  ignores: ['**/node_modules', '**/dist', 'babel.config.js', 'jest.config.js'],
 });
 /*
 

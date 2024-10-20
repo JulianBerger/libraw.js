@@ -20,6 +20,8 @@
  * Direct further questions to justinkambic.github@gmail.com.
  */
 
+// eslint-disable TS2790
+
 import { LibRaw } from '../src/libraw';
 import path from 'path';
 import fs from 'fs';
@@ -152,7 +154,7 @@ function decodeLibRawMetadata(metadata: unknown) {
 function deleteLargeFields(m: Metadata) {
   // these fields are very large - `io-ts` verifies they conform to the
   // expected type/shape, and then we delete them to keep snapshots manageable
-  delete m.color.P1_color;
+  /*delete m.color.P1_color;
   delete m.color.WB_Coeffs;
   delete m.color.WBCT_Coeffs;
   delete m.color.cblack;
@@ -176,7 +178,7 @@ function deleteLargeFields(m: Metadata) {
   delete m.rawdata.color.white;
   delete m.rawdata.iparams.xmpdata;
   delete m.rawdata.iparams.xtrans;
-  delete m.rawdata.iparams.xtrans_abs;
+  delete m.rawdata.iparams.xtrans_abs;*/
 }
 
 /*

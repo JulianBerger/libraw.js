@@ -14,22 +14,20 @@
     "node-gyp-build": "^4.8.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9",
-    "@babel/preset-env": "^7.12.7",
-    "@babel/preset-typescript": "^7.12.7",
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.13.0",
-    "@types/jest": "^29.5.0",
+    "@types/jest": "^29.5.13",
     "@types/node": "^20",
     "@typescript-eslint/eslint-plugin": "^8.1.0",
     "@typescript-eslint/parser": "^8.1.0",
-    "babel-jest": "^29.7.0",
     "eslint": "^9",
     "fp-ts": "^2.9.5",
     "husky": "^4.3.6",
     "io-ts": "^2.2.16",
     "jest": "^29.7.0",
+    "prebuildify": "^6.0.0",
     "prettier": "^2.6.0",
+    "ts-jest": "^29.2.5",
     "typescript": "^5.6",
     "typescript-eslint": "^8.10.0"
   },
@@ -47,10 +45,6 @@
     "prebuilds",
     "dist"
   ],
-  "jest": {
-    "testTimeout": 15000,
-    "verbose": true
-  },
   "bugs": {
     "url": "https://github.com/julianberger/libraw.js/issues"
   },

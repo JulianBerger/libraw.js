@@ -26,11 +26,12 @@ import nodeGypBuild from 'node-gyp-build';
 // `prebuildify` import magic, handles loading pre-built bins or will
 // try to `node-gyp build` if none are found. If you cannot get this to work
 // for your platform, you can do a dynamic install of LibRaw and the package should work.
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
 const librawAddon = nodeGypBuild(path.join(__dirname, '..'));
 
 interface LibRawWrapper {
   error_count: () => number;
-  getMetadata: () => { [key: string]: unknown };
+  getMetadata: () => Record<string, unknown>;
   getThumbnail: () => Buffer;
   getXmp: () => Buffer;
   cameraCount: () => number;
@@ -54,6 +55,7 @@ export class LibRaw {
   private libraw: LibRawWrapper;
 
   constructor() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     this.libraw = new librawAddon.LibRawWrapper();
   }
 
@@ -69,13 +71,15 @@ export class LibRaw {
    * @param buffer the RAW file data
    */
   readBuffer(buffer: Buffer): Promise<void> {
-    return this.accessLibRaw<void>(() => this.libraw.open_buffer(buffer));
+    return this.accessLibRaw(() => {
+      this.libraw.open_buffer(buffer);
+    });
   }
 
   /**
    * Returns an object containing the RAW metadata.
    */
-  getMetadata(): Promise<{ [key: string]: unknown }> {
+  getMetadata(): Promise<Record<string, unknown>> {
     return this.accessLibRaw(() => this.libraw.getMetadata());
   }
 
@@ -137,14 +141,18 @@ export class LibRaw {
    * Repeated calls of recycle() are quite possible and do not conflict with anything.
    */
   recycle(): Promise<void> {
-    return this.accessLibRaw(() => this.libraw.recycle());
+    return this.accessLibRaw(() => {
+      this.libraw.recycle();
+    });
   }
 
   /**
    * This call closes input datastream with associated data buffer and unblocks opened file.
    */
   recycleDatastream(): Promise<void> {
-    return this.accessLibRaw(() => this.libraw.recycle_datastream());
+    return this.accessLibRaw(() => {
+      this.libraw.recycle_datastream();
+    });
   }
 
   /**
@@ -191,7 +199,7 @@ export class LibRaw {
       try {
         resolve(executor());
       } catch (e: unknown) {
-        reject(e);
+        reject(e instanceof Error ? e : new Error(String(e)));
       }
     });
   }

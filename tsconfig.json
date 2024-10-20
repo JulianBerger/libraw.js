@@ -6,8 +6,9 @@
     "lib": ["ES2015"],
     "module": "commonjs",
     "outDir": "dist",
-    "sourceMap": true
+    "sourceMap": true,
+    "strictNullChecks": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "test"]
+  "include": ["src/**/*", "test/**/*"],
+  "exclude": ["node_modules"]
 }

@@ -22,7 +22,7 @@
 
 import { LibRaw } from '../src/libraw';
 import path from 'path';
-import fs, { promises as fsPromises } from 'fs';
+import fs from 'fs';
 import * as t from 'io-ts';
 import { PathReporter } from 'io-ts/lib/PathReporter';
 import { isRight } from 'fp-ts/Either';
@@ -43,6 +43,10 @@ const RAW_NIKON_PORTRAIT_FILE_PATH = path.join(
 const RAW_FUJI_FILE_PATH = path.join(
   __dirname,
   'test_images/RAW_FUJI_X100VI.RAF'
+);
+const RAW_CANON_FILE_PATH = path.join(
+  __dirname,
+  'test_images/RAW_CANON_R7.CR3'
 );
 const RAW_LEICA_FILE_PATH = path.join(
   __dirname,
@@ -399,6 +403,26 @@ describe('LibRaw', () => {
       );
     });
 
+    test('extracts a tiff from canon raw', async () => {
+      jest.setTimeout(20000);
+      expect(await lr.openFile(RAW_CANON_FILE_PATH)).toBe(0);
+      expect(await lr.extract_tiff(`${RAW_CANON_FILE_PATH}.output.tiff`)).toBe(
+        0
+      );
+
+      // comparing buffers did not work, so we hash them and compare the hashes
+      const outputTiffFile = fs.readFileSync(
+        `${RAW_CANON_FILE_PATH}.output.tiff`
+      );
+      const outputTiffFileHash = crypto
+        .createHash('sha256')
+        .update(outputTiffFile)
+        .digest()
+        .toString('hex');
+
+      expect(outputTiffFileHash).toEqual('tba');
+    });
+
     test('extracts a tiff from leica dng raw', async () => {
       jest.setTimeout(20000);
       expect(await lr.openFile(RAW_LEICA_FILE_PATH)).toBe(0);
@@ -446,9 +470,9 @@ describe('LibRaw', () => {
     test('extracts a tiff from Nikon raw in portrait format', async () => {
       jest.setTimeout(20000);
       expect(await lr.openFile(RAW_NIKON_PORTRAIT_FILE_PATH)).toBe(0);
-      expect(await lr.extract_tiff(`${RAW_NIKON_PORTRAIT_FILE_PATH}.output.tiff`)).toBe(
-        0
-      );
+      expect(
+        await lr.extract_tiff(`${RAW_NIKON_PORTRAIT_FILE_PATH}.output.tiff`)
+      ).toBe(0);
 
       // comparing buffers did not work, so we hash them and compare the hashes
       const outputTiffFile = fs.readFileSync(
@@ -481,7 +505,7 @@ describe('LibRaw', () => {
   describe('recycle', () => {
     test('runs without error', async () => {
       expect(await lr.openFile(RAW_SONY_FILE_PATH)).toBe(0);
-      expect(await lr.recycle());
+      await lr.recycle();
     });
   });
 

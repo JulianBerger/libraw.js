@@ -151,36 +151,6 @@ function decodeLibRawMetadata(metadata: unknown) {
   return decoded.right;
 }
 
-function deleteLargeFields(m: Metadata) {
-  // these fields are very large - `io-ts` verifies they conform to the
-  // expected type/shape, and then we delete them to keep snapshots manageable
-  /*delete m.color.P1_color;
-  delete m.color.WB_Coeffs;
-  delete m.color.WBCT_Coeffs;
-  delete m.color.cblack;
-  delete m.color.ccm;
-  delete m.color.cmatrix;
-  delete m.color.curve;
-  delete m.color.dng_color;
-  delete m.color.dng_levels;
-  delete m.color.white;
-  delete m.idata.xtrans;
-  delete m.idata.xtrans_abs;
-  delete m.other.gpsdata;
-  delete m.rawdata.color.WB_Coeffs;
-  delete m.rawdata.color.WBCT_Coeffs;
-  delete m.rawdata.color.cblack;
-  delete m.rawdata.color.ccm;
-  delete m.rawdata.color.cmatrix;
-  delete m.rawdata.color.curve;
-  delete m.rawdata.color.dng_color;
-  delete m.rawdata.color.dng_levels;
-  delete m.rawdata.color.white;
-  delete m.rawdata.iparams.xmpdata;
-  delete m.rawdata.iparams.xtrans;
-  delete m.rawdata.iparams.xtrans_abs;*/
-}
-
 /*
  * To avoid issues with mismatched clocks on CI server
  * we're replacing the value for the snapshot with a hardcoded one
@@ -218,8 +188,6 @@ describe('LibRaw', () => {
       await lr.openFile(RAW_SONY_FILE_PATH);
       const metadata = decodeLibRawMetadata(await lr.getMetadata());
 
-      deleteLargeFields(metadata);
-
       expect(metadata.idata).toMatchSnapshot();
       expect(metadata.lens).toMatchSnapshot();
       normalizeTimestampAndTest(metadata, { day: 28, month: 9, year: 2014 });
@@ -229,8 +197,6 @@ describe('LibRaw', () => {
     test('track key names to identify and prevent typo injection', async () => {
       await lr.openFile(RAW_NIKON_FILE_PATH);
       const metadata = decodeLibRawMetadata(await lr.getMetadata());
-
-      deleteLargeFields(metadata);
 
       normalizeTimestampAndTest(metadata, { day: 26, month: 6, year: 2019 });
 
@@ -243,8 +209,6 @@ describe('LibRaw', () => {
       await lr.readBuffer(buffer);
       await lr.unpack();
       const metadata = decodeLibRawMetadata(await lr.getMetadata());
-
-      deleteLargeFields(metadata);
 
       expect(metadata.idata).toMatchSnapshot();
       expect(metadata.lens).toMatchSnapshot();

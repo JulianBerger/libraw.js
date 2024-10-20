@@ -386,7 +386,9 @@ describe('LibRaw', () => {
         .digest()
         .toString('hex');
 
-      expect(outputTiffFileHash).toEqual('tba');
+      expect(outputTiffFileHash).toEqual(
+        'a13b76bb7bc859f6c64a67cb9b48946e4ba8fa736a96bed2866f5aae56d0801b'
+      );
     });
 
     test('extracts a tiff from leica dng raw', async () => {
@@ -407,7 +409,7 @@ describe('LibRaw', () => {
         .toString('hex');
 
       expect(outputTiffFileHash).toEqual(
-        'bb2b48e80a07b9e583c019c2a471cb5573bf734c46ea5bb7c8220f8edc0fc411'
+        '1a1a65cf971ff06fcf86e34ee23fd7213f2e38da197ac3ff5c6bb372f9fa0b3d'
       );
     });
 
@@ -429,7 +431,7 @@ describe('LibRaw', () => {
         .toString('hex');
 
       expect(outputTiffFileHash).toEqual(
-        '2a395ee6c605fc123691a79add1f9c322f0c37d300a090da2ac0ab1f65569bce'
+        'd276cb18ff7e03af3c643becf09e6d9f088cb57a77e751775ec04efbf7f43244'
       );
     });
 
@@ -451,7 +453,7 @@ describe('LibRaw', () => {
         .toString('hex');
 
       expect(outputTiffFileHash).toEqual(
-        '2a395ee6c605fc123691a79add1f9c322f0c37d300a090da2ac0ab1f65569bce'
+        '6c56d97ca566a673d34c48c94d7b736e531e79757b41f8d47d0cd13316a88b03'
       );
     });
   });

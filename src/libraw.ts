@@ -22,6 +22,10 @@
 
 import * as path from 'path';
 import nodeGypBuild from 'node-gyp-build';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); // get the name of the directory
 
 // `prebuildify` import magic, handles loading pre-built bins or will
 // try to `node-gyp build` if none are found. If you cannot get this to work

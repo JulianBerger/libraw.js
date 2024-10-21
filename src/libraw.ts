@@ -31,7 +31,7 @@ const __dirname = path.dirname(__filename); // get the name of the directory
 // try to `node-gyp build` if none are found. If you cannot get this to work
 // for your platform, you can do a dynamic install of LibRaw and the package should work.
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-const librawAddon = nodeGypBuild(path.join(__dirname, '..'));
+const librawAddon = nodeGypBuild(path.join(__dirname, '../'));
 
 interface LibRawWrapper {
   error_count: () => number;

@@ -15,6 +15,7 @@ The Linux binary will be built in a Docker container using the Amazon Linux 2023
 ### Release to NPM
 
 ```bash
+rm -rf dist/test
 npm publish --access=public
 ```
 

@@ -1,7 +1,7 @@
 {
   "name": "@julianberger/libraw.js",
   "author": "Justin Kambic",
-  "version": "3.2.4",
+  "version": "3.2.5",
   "type": "module",
   "description": "Provide a subset of LibRaw functionality.",
   "main": "./dist/src/libraw.js",
@@ -15,7 +15,7 @@
     "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs true --tsconfig ./tsconfig.json ./src/libraw.ts && rm ./docs/README.md",
     "lint": "npx eslint --config eslint.config.mjs",
     "install": "node-gyp-build",
-    "test": "jest --runInBand --no-cache",
+    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --runInBand --no-cache",
     "test-watch": "jest --watch"
   },
   "files": [
@@ -43,6 +43,7 @@
     "prebuildify": "^6.0.0",
     "prettier": "^2.6.0",
     "ts-jest": "^29.2.5",
+    "ts-jest-mock-import-meta": "^1.2.0",
     "typescript": "^5.6",
     "typescript-eslint": "^8.10.0"
   },

@@ -3,13 +3,12 @@ FROM public.ecr.aws/amazonlinux/amazonlinux:2023 AS linux-build
 ENV NODE_VERSION=22
 ENV LIBRAW_VERSION=0.21.3
 
-
 SHELL ["/bin/bash", "-c"]
 RUN yum update -y
 
 RUN yum install -y tzdata
 
-RUN yum install -y openssl-devel git gcc-c++ make autoconf automake tar
+RUN yum install -y openssl-devel git gcc-c++ make autoconf automake m4 perl tar
 
 RUN curl -fsSL https://rpm.nodesource.com/setup_${NODE_VERSION}.x | bash - && yum install -y nodejs
 

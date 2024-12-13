@@ -1,11 +1,11 @@
 {
   "name": "@julianberger/libraw.js",
   "author": "Justin Kambic",
-  "version": "3.2.6",
+  "version": "3.2.7",
   "type": "module",
   "description": "Provide a subset of LibRaw functionality.",
-  "main": "./dist/src/libraw.js",
-  "types": "./dist/src/libraw.d.ts",
+  "main": "./dist/libraw.js",
+  "types": "./dist/libraw.d.ts",
   "license": "LGPL-2.1",
   "gypfile": true,
   "scripts": {

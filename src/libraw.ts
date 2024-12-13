@@ -21,17 +21,23 @@
  */
 
 import * as path from 'path';
-import nodeGypBuild from 'node-gyp-build';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 
-const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
-const __dirname = path.dirname(__filename); // get the name of the directory
+const require = createRequire(import.meta.url);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// `prebuildify` import magic, handles loading pre-built bins or will
-// try to `node-gyp build` if none are found. If you cannot get this to work
-// for your platform, you can do a dynamic install of LibRaw and the package should work.
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-const librawAddon = nodeGypBuild(path.join(__dirname, '../'));
+// Define the type for the addon
+interface LibRawAddonType {
+  LibRawWrapper: new () => LibRawWrapper;
+}
+
+// Use require for node-gyp-build since it doesn't support ESM
+const nodeGypBuildRequire = require('node-gyp-build') as (
+  path: string
+) => LibRawAddonType;
+const librawAddon = nodeGypBuildRequire(path.join(__dirname, '../'));
 
 interface LibRawWrapper {
   error_count: () => number;
@@ -59,7 +65,6 @@ export class LibRaw {
   private libraw: LibRawWrapper;
 
   constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     this.libraw = new librawAddon.LibRawWrapper();
   }
 

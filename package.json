@@ -1,7 +1,7 @@
 {
   "name": "@julianberger/libraw.js",
   "author": "Justin Kambic",
-  "version": "3.2.5",
+  "version": "3.2.6",
   "type": "module",
   "description": "Provide a subset of LibRaw functionality.",
   "main": "./dist/src/libraw.js",

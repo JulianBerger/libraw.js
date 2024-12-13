@@ -1,7 +1,7 @@
 FROM public.ecr.aws/amazonlinux/amazonlinux:2023 AS linux-build
 
-ENV NODE_VERSION=20
-ENV LIBRAW_VERSION=0.21.2
+ENV NODE_VERSION=22
+ENV LIBRAW_VERSION=0.21.3
 
 
 SHELL ["/bin/bash", "-c"]

@@ -62,6 +62,8 @@ interface LibRawWrapper {
  * Wraps LibRaw's functionality.
  */
 export class LibRaw {
+  private static cachedVersion?: string;
+  private static cachedVersionPromise?: Promise<string>;
   private libraw: LibRawWrapper;
 
   constructor() {
@@ -191,7 +193,23 @@ export class LibRaw {
   }
 
   version(): Promise<string> {
-    return this.accessLibRaw(() => this.libraw.version());
+    if (LibRaw.cachedVersion !== undefined) {
+      return Promise.resolve(LibRaw.cachedVersion);
+    }
+
+    LibRaw.cachedVersionPromise ??= this.accessLibRaw(() =>
+      this.libraw.version()
+    )
+      .then((version) => {
+        LibRaw.cachedVersion = version;
+        return version;
+      })
+      .catch((error: unknown) => {
+        LibRaw.cachedVersionPromise = undefined;
+        throw error;
+      });
+
+    return LibRaw.cachedVersionPromise;
   }
 
   versionNumber(): Promise<number> {

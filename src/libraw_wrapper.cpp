@@ -147,47 +147,92 @@ Napi::Value LibRawWrapper::UnpackThumb(const Napi::CallbackInfo &info)
 
 Napi::Value LibRawWrapper::ExtractTiff(const Napi::CallbackInfo &info)
 {
-  Napi::Env env = info.Env();
-  if (!info[0].IsString())
-  {
-    Napi::Error::New(env, "extract_tiff received an invalid argument, tiffpath must be a string.").ThrowAsJavaScriptException();
-  }
+    Napi::Env env = info.Env();
 
-  Napi::String filename = info[0].As<Napi::String>();
+    if (info.Length() < 1 || !info[0].IsString())
+    {
+        Napi::TypeError::New(env, "extract_tiff: first argument must be a string output path").ThrowAsJavaScriptException();
+        return env.Null();
+    }
 
-  this->processor_->imgdata.params.output_tiff = 1;           // output as a tiff!
-  this->processor_->imgdata.params.output_bps = 8;            // 8 bits export is enough
-  this->processor_->imgdata.params.output_color = 1;          // sRGB = 1
-  this->processor_->imgdata.params.use_camera_wb = 1;         // use camera white balance
-  this->processor_->imgdata.params.use_camera_matrix = 1;     // use camera color matrix
-  this->processor_->imgdata.params.no_auto_bright = 0;        // contrast stretch the image
-  this->processor_->imgdata.params.auto_bright_thr = 0.00085; // contrast stretch the image
+    // Out Path Argument
+    std::string outPath = info[0].As<Napi::String>().Utf8Value();
 
-  this->processor_->imgdata.params.highlight = 0; // Highlights processing
-  // this->processor_->imgdata.params.med_passes = 1;        // median filter passes
-  // this->processor_->imgdata.params.fbdd_noiserd = 1; // noise reduction
+    if (!this->processor_)
+    {
+        Napi::Error::New(env, "LibRaw processor not initialised").ThrowAsJavaScriptException();
+        return env.Null();
+    }
 
-  this->processor_->imgdata.params.gamm[0] = 1.0 / 2.4f; // srgb
-  this->processor_->imgdata.params.gamm[1] = 4.5f;       // rec. BT.709
+    // Set output/processing params
+    auto &p = this->processor_->imgdata.params;
 
-  /* exposure correction (lighten the raw while preserving the highlights) */
-  this->processor_->imgdata.params.exp_correc = 1;
-  this->processor_->imgdata.params.exp_shift = 1.7f;  /* 0.25 = 2stop dark, 8 = 3 stop light */
-  this->processor_->imgdata.params.exp_preser = 0.5f; /* 0 - 1.0 */
+    p.output_tiff      = 1;  // write TIFF
+    p.output_bps       = 8;  // 8 for smaller files
+    p.output_color     = 1;  // sRGB
+    p.use_camera_wb    = 1;  // use camera white balance
+    p.use_camera_matrix= 1;  // use camera color matrix
 
-  /* user_qual 0 - linear interpolation
-             1 - VNG interpolation
-             2 - PPG interpolation <--- Best qual/perf
-             3 - AHD interpolation <--- Best qual
-             4 - DCB interpolation
-            11 - DHT interpolation <--- Best performance 2x slower
-*/
-  this->processor_->imgdata.params.user_qual = 2; // interpolation
+    // Choose either auto-bright or explicit exposure correction (not both aggressively)
+    p.no_auto_bright   = 1;          // reproducible brightness; disable auto-bright
+    p.auto_bright_thr  = 0.00085f;   // kept for completeness; ignored if no_auto_bright=1
 
-  this->processor_->unpack();
-  this->processor_->dcraw_process();
-  return Napi::Value::From(
-      info.Env(), this->processor_->dcraw_ppm_tiff_writer(filename.Utf8Value().c_str()));
+    // Exposure correction (gentle lift, with highlight preservation)
+    p.exp_correc       = 1;
+    p.exp_shift        = 1.3f;       // tweak 1.0..2.0 as needed
+    p.exp_preser       = 0.5f;       // 0..1: preserve highlights
+
+    // Highlight handling: 5 is a common compromise for reconstruction
+    p.highlight        = 5;
+
+    // Gamma: sRGB
+    // LibRaw expects gamm[0] = 1/gamma_power, gamm[1] = toe_slope
+    // For sRGB use 1/2.4 and 12.92; for BT.709 use 1/2.222 and 4.5
+    p.gamm[0] = 1.0f / 2.4f;
+    p.gamm[1] = 12.92f;
+
+    // Demosaic quality: 2=PPG (fast), 3=AHD (balanced), 4=DCB (high)
+    p.user_qual        = 2;
+
+    // Apply camera-provided DefaultCrop (removes masked/optical black borders)
+    // raw_inset_crops[0] = DefaultCrop; [1] may hold DefaultUserCrop/aspect ratio crop
+    const auto &c = this->processor_->imgdata.sizes.raw_inset_crops[0];
+    if (c.cwidth && c.cheight)
+    {
+        p.cropbox[0] = c.cleft;
+        p.cropbox[1] = c.ctop;
+        p.cropbox[2] = c.cwidth;
+        p.cropbox[3] = c.cheight;
+    }
+
+    // Unpack/process/write with robust error handling
+    int ret = 0;
+
+    ret = this->processor_->unpack();
+    if (ret != LIBRAW_SUCCESS)
+    {
+        Napi::Error::New(env, std::string("LibRaw unpack() failed: ") + libraw_strerror(ret)).ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    ret = this->processor_->dcraw_process();
+    if (ret != LIBRAW_SUCCESS)
+    {
+        Napi::Error::New(env, std::string("LibRaw dcraw_process() failed: ") + libraw_strerror(ret)).ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    ret = this->processor_->dcraw_ppm_tiff_writer(outPath.c_str());
+    if (ret != LIBRAW_SUCCESS)
+    {
+        Napi::Error::New(env, std::string("LibRaw write failed: ") + libraw_strerror(ret)).ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    // Optionally, expose process warnings to JS
+    // if (this->processor_->imgdata.process_warnings) { ... return an object with warnings ... }
+
+    return Napi::Boolean::New(env, true);
 }
 
 void LibRawWrapper::Recycle(const Napi::CallbackInfo &info)

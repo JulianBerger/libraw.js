@@ -1,7 +1,7 @@
 {
   "name": "@julianberger/libraw.js",
   "author": "Justin Kambic",
-  "version": "3.2.10",
+  "version": "3.3.0",
   "type": "module",
   "description": "Provide a subset of LibRaw functionality.",
   "main": "./dist/libraw.js",
@@ -40,6 +40,7 @@
     "husky": "^4.3.6",
     "io-ts": "^2.2.16",
     "jest": "^29.7.0",
+    "node-gyp": "^11.0.0",
     "prebuildify": "^6.0.0",
     "prettier": "^2.6.0",
     "ts-jest": "^29.2.5",
